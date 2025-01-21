@@ -477,7 +477,7 @@ export class MonksCommonDisplay {
                 let scaleHeight = $('body').height() / height;
                 let panData = { x: x1 + ((x2 - x1) / 2), y: y1 + ((y2 - y1) / 2), animate: true, scale: Math.min(scaleWidth, scaleHeight) };
                 if (panData.x != canvas.scene._viewPosition.x || panData.y != canvas.scene._viewPosition.y) {
-                    panData.speed = 250;
+                    panData.speed = 250 * setting("pan-speed");
                 } else {
                     panData.duration = 1000;
                 }
@@ -492,7 +492,7 @@ export class MonksCommonDisplay {
             let screenWidth = $('body').width() - (setting("show-chat-log") ? $("#sidebar").width() : 0);
             let scaleWidth = screenWidth / canvas.scene.dimensions.sceneWidth;
             let scaleHeight = $('body').height() / canvas.scene.dimensions.sceneHeight;
-            let panData = { x: (canvas.scene.dimensions.width / 2) + (setting("show-chat-log") ? $("#sidebar").width() : 0), y: canvas.scene.dimensions.height / 2, animate: true, speed: 200, scale: Math.min(scaleWidth, scaleHeight) };
+            let panData = { x: (canvas.scene.dimensions.width / 2) + (setting("show-chat-log") ? $("#sidebar").width() : 0), y: canvas.scene.dimensions.height / 2, animate: true, speed: 200 * setting("pan-speed"), scale: Math.min(scaleWidth, scaleHeight) };
             canvas.animatePan(panData);
         }
     }
@@ -738,6 +738,25 @@ Hooks.on("controlToken", async (token, control) => {
                 token.control({ releaseOthers: false });
             else
                 token.release();
+        }
+    }
+    else if (setting("screen-toggle") && MonksCommonDisplay.screenValue != ("gm" || "scene") &&
+            setting("control-follow"))
+    {
+        if (game.user.isGM && MonksCommonDisplay.toolbar) {
+
+            if(!control && canvas.tokens.controlled.length > 0)
+                return;
+
+            let tokenids = control ? canvas.tokens.controlled.map((t) => t.id).join(",") : "screen";
+
+            MonksCommonDisplay.selectToken = tokenids;
+            await game.settings.set("monks-common-display", "screen", tokenids);
+
+            MonksCommonDisplay.screenChanged();
+            MonksCommonDisplay.toolbar.render(true);
+            
+            MonksCommonDisplay.selectToken = null;
         }
     }
 });
