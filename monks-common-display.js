@@ -740,8 +740,7 @@ Hooks.on("controlToken", async (token, control) => {
                 token.release();
         }
     }
-    else if (setting("screen-toggle") && MonksCommonDisplay.screenValue != ("gm" || "scene") &&
-            setting("control-follow"))
+    else if (setting("screen-toggle") && MonksCommonDisplay.screenValue != ("gm" || "scene") && setting("control-follow"))
     {
         if (game.user.isGM && MonksCommonDisplay.toolbar) {
 
@@ -751,7 +750,11 @@ Hooks.on("controlToken", async (token, control) => {
             let tokenids = control ? canvas.tokens.controlled.map((t) => t.id).join(",") : "screen";
 
             MonksCommonDisplay.selectToken = tokenids;
-            await game.settings.set("monks-common-display", "screen", tokenids);
+
+            if (setting("per-scene"))
+                await canvas.scene.setFlag("monks-common-display", "screen", tokenids);
+            else
+                await game.settings.set("monks-common-display", "screen", tokenids);
 
             MonksCommonDisplay.screenChanged();
             MonksCommonDisplay.toolbar.render(true);

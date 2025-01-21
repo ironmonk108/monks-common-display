@@ -381,9 +381,15 @@ export class CommonToolbar extends Application {
                 name: i18n("MonksCommonDisplay.SelectTokens"),
                 icon: '<i class="fas fa-bullseye"></i>',
                 condition: game.user.isGM,
-                callback: btn => {
+                callback: async btn => {
                     let action = btn.closest(".common-button-group").data("action");
                     MonksCommonDisplay.selectToken = (!!MonksCommonDisplay.selectToken ? null : action);
+                    if(setting("control-follow")) {
+                        if (setting("per-scene"))
+                            await canvas.scene.setFlag("monks-common-display", action, "");
+                        else
+                            await game.settings.set("monks-common-display", action, "");
+                    }
                     this.render(true);
                 }
             }
