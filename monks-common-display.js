@@ -742,7 +742,9 @@ Hooks.on("controlToken", async (token, control) => {
     }
     else if (setting("screen-toggle") && MonksCommonDisplay.screenValue != ("gm" || "scene") && setting("control-follow"))
     {
-        if (game.user.isGM && MonksCommonDisplay.toolbar) {
+        let shouldMirror = token.actor.type == "character" || token.actor.token?.disposition == foundry.CONST.TOKEN_DISPOSITIONS.FRIENDLY;
+
+        if (game.user.isGM && MonksCommonDisplay.toolbar && shouldMirror) {
 
             if(!control && canvas.tokens.controlled.length > 0)
                 return;
