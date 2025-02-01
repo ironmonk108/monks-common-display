@@ -33,6 +33,22 @@ export const registerSettings = function () {
 		}
 	});
 
+	game.settings.register(modulename, "control-follow", {
+		name: i18n("MonksCommonDisplay.control-follow.name"),
+		hint: i18n("MonksCommonDisplay.control-follow.hint"),
+		scope: "world",
+		config: true,
+		default: false,
+		type: Boolean,
+		onChange: () => {
+			if (MonksCommonDisplay.toolbar && setting("show-toolbar") && game.user.isGM) {
+				MonksCommonDisplay.toolbar.render();
+			}
+			MonksCommonDisplay.screenChanged();
+			MonksCommonDisplay.focusChanged();
+		}
+	});
+
 	game.settings.register(modulename, "hide-ui", {
 		name: i18n("MonksCommonDisplay.hide-ui.name"),
 		hint: i18n("MonksCommonDisplay.hide-ui.hint"),
@@ -52,6 +68,20 @@ export const registerSettings = function () {
 		config: true,
 		default: false,
 		type: Boolean
+	});
+
+	game.settings.register(modulename, "pan-speed", {
+		name: i18n("MonksCommonDisplay.pan-speed.name"),
+		hint: i18n("MonksCommonDisplay.pan-speed.hint"),
+		scope: "world",
+		config: true,
+		range: {
+			min: 0.1,
+			max: 10,
+			step: 0.1,
+		},
+		default: 1,
+		type: Number
 	});
 
 	game.settings.register(modulename, "focus-padding", {
