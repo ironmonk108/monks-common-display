@@ -37,7 +37,6 @@
   "download": "https://github.com/ironmonk88/monks-common-display/archive/12.01.zip",
   "manifest": "https://github.com/ironmonk88/monks-common-display/releases/latest/download/module.json",
   "bugs": "https://github.com/ironmonk88/monks-common-display/issues",
-  "allowBugReporter": true,
   "id": "monks-common-display",
   "compatibility": {
     "minimum": "12",
