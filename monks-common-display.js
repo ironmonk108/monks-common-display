@@ -238,7 +238,7 @@ export class MonksCommonDisplay {
 
         if (game.user.isGM) {
             MonksCommonDisplay.initGM();
-        } 
+        }
         game.socket.on(MonksCommonDisplay.SOCKET, MonksCommonDisplay.onMessage);
 
         if (display && game.combats.active) {
@@ -731,7 +731,7 @@ Hooks.on("controlToken", async (token, control) => {
     if (display && setting("focus-toggle")) {
         // double-check that this is the token that should be focussed
         let shouldControl = (focus == "gm" && MonksCommonDisplay.gmControlledTokens.has(token.id)) ||
-            (focus == "combat" && game.combats.active && game.combats.active.combatant?.token.id == token.id) || 
+            (focus == "combat" && game.combats.active && game.combats.active.combatant?.token.id == token.id) ||
             (focus == token.id || focus == token.actor?.id);
         if (control != shouldControl) {
             if (shouldControl)
