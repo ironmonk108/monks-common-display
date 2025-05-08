@@ -547,7 +547,7 @@ export class MonksCommonDisplay {
     }
 
     static getTokens(value) {
-        if (value == "combat" && game.combats.active && game.combats.active.started && game.combats.active.combatant?.token && !game.combats.active.combatant?.token.hidden) {
+        if (value == "combat" && game.combats.active && game.combats.active.started && game.combats.active.combatant?.token && !game.combats.active.combatant.hidden && !game.combats.active.combatant?.token.hidden) {
             let targets = Array.from(game.user.targets).map(t => t.document);
             return [game.combats.active.combatant?.token, ...targets];
         }
