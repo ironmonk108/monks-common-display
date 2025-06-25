@@ -1,39 +1,39 @@
 <div id="common-display-toolbar" class="flexrow common-display-toolbar{{cssClass}}" style="flex-wrap: nowrap;{{pos}}">
-    <div class="move-handle">
-        <!--<div class="toggle-collapse">
+  <div class="move-handle">
+    <!--<div class="toggle-collapse">
             <i class="fas {{collapseIcon}}"></i>
         </div>-->
+  </div>
+  <div class="bar-controls flexcol">
+    <div class="common-display-button small" data-action="clear-journal" data-tooltip="Clear Journals">
+      <i class="fas fa-book-open"></i>
     </div>
-    <div class="bar-controls flexcol">
-        <div class="common-display-button small" data-action="clear-journal" data-tooltip="Clear Journals">
-            <i class="fas fa-book-open"></i>
-        </div>
-        <div class="common-display-button small" data-action="clear-image" data-tooltip="Clear Images" style="margin-top: 6px;">
-            <i class="fas fa-image"></i>
-        </div>
+    <div class="common-display-button small" data-action="clear-image" data-tooltip="Clear Images" style="margin-top: 6px">
+      <i class="fas fa-image"></i>
     </div>
-    <div class="flexcol common-button-group" data-action="screen">
-        <div class="header screen" data-tooltip="Set what the player screen should mirror">Screen <i class="fas fa-cog" style="font-size: 10px;"></i></div>
-        <div class="flexrow content{{#if screen.active}} active{{/if}}">
-            <div class="toggle {{#if screen.active}} active{{/if}} screen common-display-button" data-tooltip="{{screen.tooltip}}">
-                {{#if screen.img}}
-                <img src="{{screen.img}}"/>
-                {{else}}
-                <i class="fas {{screen.icon}}"></i>
-                {{/if}}
-            </div>
-        </div>
+  </div>
+  <div class="flexcol common-button-group" data-action="screen">
+    <div class="header screen" data-tooltip="Set what the player screen should mirror">Screen <i class="fas fa-cog" style="font-size: 10px"></i></div>
+    <div class="flexrow content{{#if screen.active}} active{{/if}}">
+      <div class="toggle {{#if screen.active}} active{{/if}} screen common-display-button" data-tooltip="{{screen.tooltip}}">
+        {{#if screen.img}}
+        <img src="{{screen.img}}" />
+        {{else}}
+        <i class="fas {{screen.icon}}"></i>
+        {{/if}}
+      </div>
     </div>
-    <div class="flexcol common-button-group" data-action="focus">
-        <div class="header focus" data-tooltip="Set what token should be controlled">Vision <i class="fas fa-cog" style="font-size: 10px;"></i></div>
-        <div class="flexrow content{{#if focus.active}} active{{/if}}">
-            <div class="toggle {{#if focus.active}} active{{/if}} focus common-display-button" data-tooltip="{{focus.tooltip}}">
-                {{#if focus.img}}
-                <img src="{{focus.img}}" />
-                {{else}}
-                <i class="fas {{focus.icon}}"></i>
-                {{/if}}
-            </div>
-        </div>
+  </div>
+  <div class="flexcol common-button-group" data-action="focus">
+    <div class="header focus" data-tooltip="Set what token should be controlled">Vision <i class="fas fa-cog" style="font-size: 10px"></i></div>
+    <div class="flexrow content{{#if focus.active}} active{{/if}}">
+      <div class="toggle {{#if focus.active}} active{{/if}} focus common-display-button" data-tooltip="{{focus.tooltip}}">
+        {{#if focus.img}}
+        <img src="{{focus.img}}" />
+        {{else}}
+        <i class="fas {{focus.icon}}"></i>
+        {{/if}}
+      </div>
     </div>
+  </div>
 </div>

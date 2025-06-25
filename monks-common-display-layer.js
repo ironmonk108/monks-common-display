@@ -1,28 +1,27 @@
 export class MonksCommonDisplayLayer extends InteractionLayer {
-    constructor() {
-        super();
-    }
+  constructor() {
+    super();
+  }
 
-    static get layerOptions() {
-        return foundry.utils.mergeObject(super.layerOptions, {
-            objectClass: Note,
-            sheetClass: NoteConfig,
-            sheetClasses: {
-                base: {
-                }
-            },
-            canDragCreate: false,
-            zIndex: 180
-        });
-    }
+  static get layerOptions() {
+    return foundry.utils.mergeObject(super.layerOptions, {
+      objectClass: Note,
+      sheetClass: NoteConfig,
+      sheetClasses: {
+        base: {},
+      },
+      canDragCreate: false,
+      zIndex: 180,
+    });
+  }
 
-    static documentName = "MonksCommonDisplayLayer";
+  static documentName = 'MonksCommonDisplayLayer';
 
-    async draw() {
-        //don't draw anything, it's not that kind of layer
-    }
+  async draw() {
+    //don't draw anything, it's not that kind of layer
+  }
 
-    /*
+  /*
     activate() {
         //don't activate anything, it's not that kind of layer
         const wasActive = this._active;

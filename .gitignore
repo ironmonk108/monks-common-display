@@ -1,3 +1,15 @@
 .vs/
 screenshots/
 .svn/
+
+.prettierrc
+
+node_modules/
+
+.github/
+
+settings.json
+
+package-lock.json
+
+package.json
