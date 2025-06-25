@@ -4,17 +4,30 @@
     */
 
 body.hide-ui
-  > *:not(#logo):not(#interface):not(#board):not(#hud):not(#ui-left):not(#ui-middle):not(#ui-right):not(#confetti-canvas):not(#dice-box-canvas):not(#pause):not(#notifications):not(#narrator):not(#combat-popout):not(.image-popout):not(
+  > *:not(#logo):not(#interface):not(#board):not(#hud):not(#ui-left):not(
+    #ui-middle
+  ):not(#ui-right):not(#confetti-canvas):not(#dice-box-canvas):not(#pause):not(
+    #notifications
+  ):not(#narrator):not(#combat-popout):not(.image-popout):not(
     .journal-sheet
-  ):not(.journal-attached):not(#slideshow-display):not(#slideshow-canvas):not(#combat-carousel):not(#levels3d):not(#av-config):not(#camera-views):not(#combat-dock):not(#conversation-hud-background):not(.story-sheet),
+  ):not(.journal-attached):not(#slideshow-display):not(#slideshow-canvas):not(
+    #combat-carousel
+  ):not(#levels3d):not(#av-config):not(#camera-views):not(#combat-dock):not(
+    #conversation-hud-background
+  ):not(.story-sheet),
 body.hide-ui #ui-left > *:not(#smalltime-app),
-body.hide-ui #ui-middle > *:not(#ui-top):not(#ui-bottom):not(#ui-conversation-hud),
-body.hide-ui #ui-middle #ui-top > *:not(#loading):not(#combat-dock):not(.bossBar):not(.bossBarSpacer),
+body.hide-ui
+  #ui-middle
+  > *:not(#ui-top):not(#ui-bottom):not(#ui-conversation-hud),
+body.hide-ui
+  #ui-middle
+  #ui-top
+  > *:not(#loading):not(#combat-dock):not(.bossBar):not(.bossBarSpacer),
 body.hide-ui #ui-middle #ui-bottom > *:not(#camera-views),
 body.hide-ui #ui-right > *:not(#sidebar),
 body.hide-ui #hud > *:not(#image-hover-hud):not(#healthEstimate),
-body.hide-ui #sidebar > *:not(.sidebar-tab[data-tab='chat']),
-body.hide-ui #sidebar .sidebar-tab[data-tab='chat'] > *:not(#chat-log),
+body.hide-ui #sidebar > *:not(.sidebar-tab[data-tab="chat"]),
+body.hide-ui #sidebar .sidebar-tab[data-tab="chat"] > *:not(#chat-log),
 body.hide-ui .image-popout > *:not(.window-content) {
   display: none !important;
 }
@@ -27,7 +40,10 @@ body.hide-ui #combat-popout .sidebar-tab nav,
 body.hide-ui #combat-popout .window-resizable-handle {
   display: none !important;
 }
-body.hide-ui:not(.show-combatants) #combat-popout .sidebar-tab .combatant:not(.active) {
+body.hide-ui:not(.show-combatants)
+  #combat-popout
+  .sidebar-tab
+  .combatant:not(.active) {
   display: none !important;
 }
 body.hide-ui:not(.show-combatants) #combat-popout #combat-tracker {
@@ -52,19 +68,19 @@ body.hide-ui.show-combatants #combat-popout {
   min-height: unset !important;
   max-height: 100%;
 }
-body.hide-ui.show-combatants[limit-combatants='2'] #combat-popout {
+body.hide-ui.show-combatants[limit-combatants="2"] #combat-popout {
   height: 100px !important;
   min-height: 100px !important;
 }
-body.hide-ui.show-combatants[limit-combatants='3'] #combat-popout {
+body.hide-ui.show-combatants[limit-combatants="3"] #combat-popout {
   height: 160px !important;
   min-height: 160px !important;
 }
-body.hide-ui.show-combatants[limit-combatants='4'] #combat-popout {
+body.hide-ui.show-combatants[limit-combatants="4"] #combat-popout {
   height: 215px !important;
   min-height: 215px !important;
 }
-body.hide-ui.show-combatants[limit-combatants='5'] #combat-popout {
+body.hide-ui.show-combatants[limit-combatants="5"] #combat-popout {
   height: 265px !important;
   min-height: 265px !important;
 }
@@ -73,11 +89,20 @@ body.hide-ui #combat-popout .sidebar-tab .combatant.active {
   margin-top: 3px;
 }
 
-body.hide-ui #combat-popout .sidebar-tab .combatant.active > *:not(.token-image):not(.token-name):not(.ce-image-wrapper) {
+body.hide-ui
+  #combat-popout
+  .sidebar-tab
+  .combatant.active
+  > *:not(.token-image):not(.token-name):not(.ce-image-wrapper) {
   display: none !important;
 }
 
-body.hide-ui #combat-popout .sidebar-tab .combatant.active .token-name > *:not(h4) {
+body.hide-ui
+  #combat-popout
+  .sidebar-tab
+  .combatant.active
+  .token-name
+  > *:not(h4) {
   display: none !important;
 }
 
@@ -153,7 +178,13 @@ body.hide-camera-views #camera-views {
   text-align: center;
 }
 
-.window-content .monks-common-display .sheet .items-list .item .item-name .item-image {
+.window-content
+  .monks-common-display
+  .sheet
+  .items-list
+  .item
+  .item-name
+  .item-image {
   flex: 0 0 48px;
   width: 48px;
 }
@@ -190,7 +221,7 @@ body.hide-camera-views #camera-views {
 
 .monks-common-display .sheet .items-list .items-header h3 {
   padding-left: 5px;
-  font-family: 'Modesto Condensed', 'Palatino Linotype', serif;
+  font-family: "Modesto Condensed", "Palatino Linotype", serif;
   font-size: 20px;
   font-weight: 700;
   text-align: left;
@@ -349,4 +380,13 @@ body.hide-camera-views #camera-views {
 }
 .move-handle {
   height: 20px;
+}
+li.combatant.next-round .token-name::before,
+li.combatant.next-round .token-name::after {
+  content: "";
+  flex: 1;                    /* zajmuje wolne miejsce */
+  height: 1px;                /* grubość linii */
+  background-color: white;
+  margin-top: auto;    
+  margin-bottom: auto; /* kolor linii – możesz zmienić */
 }

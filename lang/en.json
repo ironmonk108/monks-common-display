@@ -56,5 +56,6 @@
   "MonksCommonDisplay.clear.name": "Clear",
   "MonksCommonDisplay.clear.hint": "Clear all open windows for this player",
 
-  "MonksCommonDisplay.save": "Save Changes"
+  "MonksCommonDisplay.save": "Save Changes",
+  "MonksCommonDisplay.nextRound": "Next Round"  
 }

@@ -15,7 +15,7 @@ export class MonksCommonDisplayLayer extends InteractionLayer {
     });
   }
 
-  static documentName = 'MonksCommonDisplayLayer';
+  static documentName = "MonksCommonDisplayLayer";
 
   async draw() {
     //don't draw anything, it's not that kind of layer
