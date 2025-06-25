@@ -1,36 +1,46 @@
 <form>
-    <div class="flexrow player-content">
-        <div class="character-container">
-            <ul class="flexcol">
-            {{#each actors}}
-            <li class="character-icon{{#if (eq @root.selected.id this.id)}} active{{/if}}" data-id="{{this.id}}" style="background-image:url('{{this.img}}')"></li>
-            {{/each}}
-            </ul>
-        </div>
-        <div class="flexcol">
-            <div class="player-name">{{selected.name}}</div>
-            <section class="player-interface">
-                <div class="tab direction active" data-group="primary" data-tab="direction">
-                    <div class="player-direction">
-
-                    </div>
-                </div>
-                <div class="tab information" data-group="primary" data-tab="information">
-                    <div>
-                        Player Interface
-                        Select a Player
-                        Movement
-                        Chat log
-                        Character HP, rolls, attacks, spells
-                    </div>
-                </div>
-            </section>
-            <nav class="sheet-navigation tabs player-tabs" data-group="primary">
-                <a class="item active" data-tab="direction"><i class="fas fa-arrows-alt"></i> Direction</a>
-                <a class="item" data-tab="information"><i class="fas fa-book-reader"></i> Information</a>
-            </nav>
-        </div>
-        <div class="chat-container flexcol">
-        </div>
+  <div class="flexrow player-content">
+    <div class="character-container">
+      <ul class="flexcol">
+        {{#each actors}}
+        <li
+          class="character-icon{{#if (eq @root.selected.id this.id)}} active{{/if}}"
+          data-id="{{this.id}}"
+          style="background-image:url('{{this.img}}')"
+        ></li>
+        {{/each}}
+      </ul>
     </div>
+    <div class="flexcol">
+      <div class="player-name">{{selected.name}}</div>
+      <section class="player-interface">
+        <div
+          class="tab direction active"
+          data-group="primary"
+          data-tab="direction"
+        >
+          <div class="player-direction"></div>
+        </div>
+        <div
+          class="tab information"
+          data-group="primary"
+          data-tab="information"
+        >
+          <div>
+            Player Interface Select a Player Movement Chat log Character HP,
+            rolls, attacks, spells
+          </div>
+        </div>
+      </section>
+      <nav class="sheet-navigation tabs player-tabs" data-group="primary">
+        <a class="item active" data-tab="direction"
+          ><i class="fas fa-arrows-alt"></i> Direction</a
+        >
+        <a class="item" data-tab="information"
+          ><i class="fas fa-book-reader"></i> Information</a
+        >
+      </nav>
+    </div>
+    <div class="chat-container flexcol"></div>
+  </div>
 </form>

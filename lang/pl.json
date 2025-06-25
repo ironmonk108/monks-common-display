@@ -56,5 +56,6 @@
   "MonksCommonDisplay.clear.name": "Wyczyść",
   "MonksCommonDisplay.clear.hint": "Wyczyść wszystkie otwarte okna dla tego gracza",
 
-  "MonksCommonDisplay.save": "Zapisz zmiany"
+  "MonksCommonDisplay.save": "Zapisz zmiany",
+  "MonksCommonDisplay.nextRound": "Następna Runda"  
 }
