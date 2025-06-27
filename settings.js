@@ -2,7 +2,7 @@ import { MonksCommonDisplay, i18n, setting } from "./monks-common-display.js";
 import { ControllerApp } from "./apps/controller.js"
 
 export const registerSettings = function () {
-    // Register any custom module settings here
+	// Register any custom module settings here
 	let modulename = "monks-common-display";
 
 	game.settings.registerMenu(modulename, 'configure', {
@@ -54,6 +54,33 @@ export const registerSettings = function () {
 		type: Boolean
 	});
 
+	game.settings.register(modulename, "close-image-on-close", {
+		name: i18n("MonksCommonDisplay.close-image-on-close.name"),
+		hint: i18n("MonksCommonDisplay.close-image-on-close.hint"),
+		scope: "world",
+		config: true,
+		default: false,
+		type: Boolean
+	});
+
+	game.settings.register(modulename, "just-friendly", {
+		name: i18n("MonksCommonDisplay.just-friendly.name"),
+		hint: i18n("MonksCommonDisplay.just-friendly.hint"),
+		scope: "world",
+		config: true,
+		default: true,
+		type: Boolean,
+		onChange: () => {
+			if (MonksCommonDisplay.toolbar && setting("show-toolbar") && game.user.isGM) {
+				MonksCommonDisplay.toolbar.render();
+			}
+			if (setting("screen") == "controlled")
+				MonksCommonDisplay.screenChanged();
+			if (setting("focus") == "controlled")
+				MonksCommonDisplay.focusChanged();
+		}
+	});
+
 	game.settings.register(modulename, "focus-padding", {
 		name: i18n("MonksCommonDisplay.focus-padding.name"),
 		hint: i18n("MonksCommonDisplay.focus-padding.hint"),
@@ -68,12 +95,37 @@ export const registerSettings = function () {
 		type: Number,
 		onChange: () => {
 			MonksCommonDisplay.screenChanged();
-        }
+		}
+	});
+
+	game.settings.register(modulename, "pan-speed", {
+		name: i18n("MonksCommonDisplay.pan-speed.name"),
+		hint: i18n("MonksCommonDisplay.pan-speed.hint"),
+		scope: "world",
+		config: true,
+		range: {
+			min: 50,
+			max: 5000,
+			step: 10,
+		},
+		default: 250,
+		type: Number
 	});
 
 	game.settings.register(modulename, "show-chat-log", {
 		name: i18n("MonksCommonDisplay.show-chat-log.name"),
 		hint: i18n("MonksCommonDisplay.show-chat-log.hint"),
+		scope: "world",
+		config: true,
+		default: true,
+		type: Boolean,
+		onChange: () => {
+			MonksCommonDisplay.toggleCommonDisplay();
+		}
+	});
+	game.settings.register(modulename, "expand-chat-log", {
+		name: i18n("MonksCommonDisplay.expand-chat-log.name"),
+		hint: i18n("MonksCommonDisplay.expand-chat-log.hint"),
 		scope: "world",
 		config: true,
 		default: true,
@@ -105,25 +157,13 @@ export const registerSettings = function () {
 		}
 	});
 
-	game.settings.register(modulename, "show-combatants", {
-		name: i18n("MonksCommonDisplay.show-combatants.name"),
-		hint: i18n("MonksCommonDisplay.show-combatants.hint"),
-		scope: "world",
-		config: true,
-		default: false,
-		type: Boolean,
-		onChange: () => {
-			MonksCommonDisplay.toggleCommonDisplay();
-		}
-	});
-
 	game.settings.register(modulename, "limit-shown", {
 		name: i18n("MonksCommonDisplay.limit-shown.name"),
 		scope: "world",
 		config: true,
 		range: {
 			min: 1,
-			max: 5,
+			max: 10,
 			step: 1,
 		},
 		default: 1,
@@ -164,16 +204,6 @@ export const registerSettings = function () {
 		},
 		default: 10,
 		type: Number
-	});
-
-	game.settings.register(modulename, "show-vertical", {
-		name: i18n("MonksCommonDisplay.show-vertical.name"),
-		hint: i18n("MonksCommonDisplay.show-vertical.hint"),
-		scope: "world",
-		config: false,
-		default: false,
-		type: Boolean,
-		requiresReload: true
 	});
 
 	game.settings.register(modulename, "startupdata", {

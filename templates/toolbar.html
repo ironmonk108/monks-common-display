@@ -1,33 +1,29 @@
-<div id="common-display-toolbar" class="flexrow common-display-toolbar{{cssClass}}" style="flex-wrap: nowrap;{{pos}}">
-    <div class="move-handle">
-        <!--<div class="toggle-collapse">
-            <i class="fas {{collapseIcon}}"></i>
-        </div>-->
-    </div>
+<div>
     <div class="bar-controls flexcol">
-        <div class="common-display-button small" data-action="clear-journal" data-tooltip="Clear Journals">
+        <div class="common-display-button small" data-action="clearJournal" data-tooltip="{{localize 'MonksCommonDisplay.clear-journals'}}">
             <i class="fas fa-book-open"></i>
         </div>
-        <div class="common-display-button small" data-action="clear-image" data-tooltip="Clear Images" style="margin-top: 6px;">
+        <div class="common-display-button small" data-action="clearImage" data-tooltip="{{localize 'MonksCommonDisplay.clear-images'}}" style="margin-top: 6px;">
             <i class="fas fa-image"></i>
         </div>
     </div>
-    <div class="flexcol common-button-group" data-action="screen">
-        <div class="header screen" data-tooltip="Set what the player screen should mirror">Screen <i class="fas fa-cog" style="font-size: 10px;"></i></div>
-        <div class="flexrow content{{#if screen.active}} active{{/if}}">
-            <div class="toggle {{#if screen.active}} active{{/if}} screen common-display-button" data-tooltip="{{screen.tooltip}}">
+    <div class="flexcol common-button-group" data-group="screen">
+        <div class="header" data-tooltip="{{localize 'MonksCommonDisplay.ScreenHint'}}">{{localize 'MonksCommonDisplay.Screen'}} <i class="fas fa-cog" style="font-size: 10px;"></i></div>
+        <div class="flexrow content{{#if screen.active
+            }} active{{/if}}">
+            <div class="toggle {{#if screen.active}} active{{/if}} common-display-button" data-action="toggleScreen" data-tooltip="{{screen.tooltip}}">
                 {{#if screen.img}}
-                <img src="{{screen.img}}"/>
+                <img src="{{screen.img}}" />
                 {{else}}
                 <i class="fas {{screen.icon}}"></i>
                 {{/if}}
             </div>
         </div>
     </div>
-    <div class="flexcol common-button-group" data-action="focus">
-        <div class="header focus" data-tooltip="Set what token should be controlled">Vision <i class="fas fa-cog" style="font-size: 10px;"></i></div>
+    <div class="flexcol common-button-group" data-group="focus">
+        <div class="header" data-tooltip="{{localize 'MonksCommonDisplay.VisionHint'}}">{{localize 'MonksCommonDisplay.Vision'}} <i class="fas fa-cog" style="font-size: 10px;"></i></div>
         <div class="flexrow content{{#if focus.active}} active{{/if}}">
-            <div class="toggle {{#if focus.active}} active{{/if}} focus common-display-button" data-tooltip="{{focus.tooltip}}">
+            <div class="toggle {{#if focus.active}} active{{/if}} common-display-button" data-action="toggleFocus" data-tooltip="{{focus.tooltip}}">
                 {{#if focus.img}}
                 <img src="{{focus.img}}" />
                 {{else}}

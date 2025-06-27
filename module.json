@@ -1,49 +1,51 @@
 {
-  "title": "Monk's Common Display",
-  "description": "Set up a display without all the ui so that it can be displayed on an alternate screen",
-  "version": "12.01",
-  "socket": true,
-  "authors": [
-    {
-      "name": "IronMonk",
-      "discord": "ironmonk88#4075",
-	  "flags": {
-		  "github": "ironmonk88",
-		  "patreon": "ironmonk",
-		  "ko-fi": "ironmonk88"
-	  }
-    }
-  ],
-  "languages": [
-    {
-      "lang": "en",
-      "name": "English",
-      "path": "lang/en.json"
-    },
-    {
-      "lang": "pl",
-      "name": "Polski",
-      "path": "lang/pl.json"
-    }
-  ],
-  "esmodules": [
-    "monks-common-display.js",
-    "settings.js"
-  ],
-  "styles": [
-    "css/monks-common-display.css"
-  ],
-  "url": "https://github.com/ironmonk88/monks-common-display",
-  "download": "https://github.com/ironmonk88/monks-common-display/archive/12.01.zip",
-  "manifest": "https://github.com/ironmonk88/monks-common-display/releases/latest/download/module.json",
-  "bugs": "https://github.com/ironmonk88/monks-common-display/issues",
-  "allowBugReporter": true,
-  "id": "monks-common-display",
-  "compatibility": {
-    "minimum": "12",
-    "verified": "12"
-  },
-  "name": "monks-common-display",
-  "minimumCoreVersion": "12",
-  "compatibleCoreVersion": "12"
+	"title": "Monk's Common Display",
+	"description": "Set up a display without all the ui so that it can be displayed on an alternate screen",
+	"version": "13.01",
+	"socket": true,
+	"authors": [
+		{
+			"name": "IronMonk",
+			"discord": "ironmonk108",
+			"flags": {
+				"github": "ironmonk108",
+				"patreon": "ironmonk",
+				"ko-fi": "ironmonk88"
+			}
+		}
+	],
+	"languages": [
+		{
+			"lang": "en",
+			"name": "English",
+			"path": "lang/en.json"
+		},
+		{
+			"lang": "pl",
+			"name": "Polski",
+			"path": "lang/pl.json"
+		}
+	],
+	"esmodules": [
+		"monks-common-display.js",
+		"settings.js"
+	],
+	"styles": [
+		"css/monks-common-display.css"
+	],
+	"url": "https://github.com/ironmonk108/monks-common-display",
+	"download": "https://github.com/ironmonk108/monks-common-display/archive/13.01.zip",
+	"manifest": "https://github.com/ironmonk108/monks-common-display/releases/latest/download/module.json",
+	"bugs": "https://github.com/ironmonk108/monks-common-display/issues",
+	"id": "monks-common-display",
+	"compatibility": {
+		"minimum": "13",
+		"verified": "13"
+	},
+	"name": "monks-common-display",
+	"minimumCoreVersion": "13",
+	"compatibleCoreVersion": "13",
+	"flags": {
+		"allowBugReporter": true
+	}
 }

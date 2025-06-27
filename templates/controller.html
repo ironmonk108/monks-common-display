@@ -1,38 +1,25 @@
-<div class="monks-common-display flexcol" style="height:100%;">
-    <div class="dialog-content" style="max-height: calc(100% - 32px);">
-        <form style="height:100%;" class="flexcol">
-            <div class="sheet">
-                <ol class="items-list inventory-list">
-                    <li class="items-header flexrow">
-                        <h3 class="item-name flexrow noborder" style="margin-right:auto;">{{localize 'MonksCommonDisplay.players'}}</h3>
-                        <div class="item-control" title="{{localize 'MonksCommonDisplay.display.hint'}}">
-                            {{localize 'MonksCommonDisplay.display.name'}}
-                        </div>
-                    </li>
-
-                    <ol class="item-list">
-                        {{#each players}}
-                        <li class="item flexrow " data-item-id="{{this.id}}">
-                            <div class="item-name flexrow rollable">
-                                <div class="item-image" style="background-image: url('{{this.img}}')">
-                                    <video width="30" height="30"><source src="{{this.img}}" /></video>
-                                </div>
-                                <h4>
-                                    {{this.name}}
-                                </h4>
-                            </div>
-                            <div class="item-controls flexrow">
-                                <input type="checkbox" {{#if this.display}}checked{{/if}} class="display" />
-                            </div>
-                        </li>
-                        {{/each}}
-                    </ol>
-                </ol>
+<div>
+    <p class="hint">{{localize 'MonksCommonDisplay.player-select-hint'}}</p>
+    <header>
+        <label class="name">{{localize 'MonksCommonDisplay.players'}}</label>
+        <div class="display" data-tooltip="{{localize 'MonksCommonDisplay.display.hint'}}">{{localize 'MonksCommonDisplay.display.name'}}</div>
+    </header>
+    <ol class="scrollable user-list" data-users>
+        {{#each players as |player i|}}
+        <li class="sound draggable" data-index="{{i}}" draggable="true" data-sound-id="{{player.id}}">
+            <div class="name">
+                {{{player.name}}}
             </div>
-        </form>
-    </div>
-    <hr style="width: 100%;flex: 0 0 1px;" />
-    <div class="dialog-buttons" style="flex: 0 0 30px;">
-        <button type="submit" name="submit" class="dialog-buttons save" data-button="request"><i class="far fa-save"></i> {{localize 'MonksCommonDisplay.save'}}</button>
-    </div>
+
+            <div class="display">
+                <input type="checkbox" name="{{player.id}}.display" {{#if player.display}} checked{{/if}} />
+            </div>
+        </li>
+        {{/each}}
+    </ol>
+    <footer class="sheet-footer flexrow" style="flex-grow:0;">
+        <button type="submit" name="submit">
+            <i class="far fa-save"></i> {{localize 'MonksCommonDisplay.save'}}
+        </button>
+    </footer>
 </div>

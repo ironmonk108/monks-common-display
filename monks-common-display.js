@@ -1,5 +1,4 @@
 ﻿import { registerSettings } from "./settings.js";
-import { MonksCommonDisplayLayer } from './monks-common-display-layer.js';
 import { CommonToolbar } from "./apps/toolbar.js"
 
 export const DEBUG = false;
@@ -35,28 +34,6 @@ export let patchFunc = (prop, func, type = "WRAPPER") => {
     }
 }
 
-function registerLayer() {
-    /*
-    CONFIG.Canvas.layers.monkscommondisplay = { group: "interface", layerClass: MonksCommonDisplayLayer };
-    CONFIG.MonksCommonDisplayLayer = {
-        documentClass: null,
-        layerClass: MonksCommonDisplayLayer,
-        prototypeSheetClass: NoteConfig,
-        objectClass: Note,
-        sheetClasses: {}
-    };
-    */
-    /*
-    const layers = foundry.utils.mergeObject(Canvas.layers, {
-        MonksCommonDisplayLayer: MonksCommonDisplayLayer
-    });
-    Object.defineProperty(Canvas, 'layers', {
-        get: function () {
-            return layers
-        }
-    });*/
-}
-
 export class MonksCommonDisplay {
     static playerdata = {};
     static windows = {};
@@ -68,7 +45,7 @@ export class MonksCommonDisplay {
         MonksCommonDisplay.registerHotKeys();
 
         if (game.modules.get("lib-wrapper")?.active) {
-            libWrapper.ignore_conflicts("monks-common-display", "monks-active-tiles", "ActorDirectory.prototype._onClickEntryName");
+            libWrapper.ignore_conflicts("monks-common-display", "monks-active-tiles", "foundry.applications.sidebar.tabs.ActorDirectory.prototype._onClickEntryName");
         }
 
         //this is so the screen starts up with the correct information, it'll be altered once the players are actually loaded
@@ -77,7 +54,7 @@ export class MonksCommonDisplay {
 
         //registerLayer();
 
-        patchFunc("Notifications.prototype.warn", async function (wrapped, ...args) {
+        patchFunc("foundry.applications.ui.Notifications.prototype.warn", async function (wrapped, ...args) {
             let [message, options] = args;
 
             let display = MonksCommonDisplay.playerdata.display || false;
@@ -87,7 +64,7 @@ export class MonksCommonDisplay {
             return wrapped(...args);
         }, "MIXED");
 
-        patchFunc("Journal.prototype.constructor.showImage", async function (wrapped, ...args) {
+        patchFunc("foundry.documents.collections.Journal.prototype.constructor.showImage", async function (wrapped, ...args) {
             let [src, data] = args;
 
             let commonid = foundry.utils.randomID();
@@ -97,34 +74,37 @@ export class MonksCommonDisplay {
             let closeAfter = setting("close-after") ?? 0;
             if (closeAfter != 0) {
                 window.setTimeout(() => {
-                    MonksCommonDisplay.emit("closeImage", { args: { id: commonid } });
+                    MonksCommonDisplay.emit("closeDocument", { args: { id: commonid } });
                 }, closeAfter * 1000);
             }
         });
 
-        patchFunc("ImagePopout.prototype.shareImage", async function (...args) {
+        patchFunc("foundry.applications.apps.ImagePopout.prototype.shareImage", async function (...args) {
             let commonid = foundry.utils.randomID();
+            let [options = {}] = args;
+
+            this._commonid = commonid;
+
+            const title = options.title ?? this.options.window.title;
             game.socket.emit("shareImage", {
-                image: this.object,
-                title: this.options.title,
-                caption: this.options.caption,
-                uuid: this.options.uuid,
+                image: options.image ?? this.options.src,
+                title,
+                caption: options.caption ?? this.options.caption,
+                uuid: options.uuid ?? this.options.uuid,
+                showTitle: options.showTitle ?? this.options.showTitle,
+                users: Array.isArray(options.users) ? options.users : undefined,
                 commonid: commonid
             });
-            ui.notifications.info(game.i18n.format("JOURNAL.ActionShowSuccess", {
-                mode: "image",
-                title: this.options.title,
-                which: "all"
-            }));
+            ui.notifications.info("JOURNAL.ActionShowSuccess", { format: { mode: "image", title, which: "all" } });
             let closeAfter = setting("close-after") ?? 0;
             if (closeAfter != 0) {
                 window.setTimeout(() => {
-                    MonksCommonDisplay.emit("closeImage", { args: { id: commonid } });
+                    MonksCommonDisplay.emit("closeDocument", { args: { id: commonid } });
                 }, closeAfter * 1000);
             }
         }, "OVERRIDE");
 
-        patchFunc("ImagePopout.prototype.constructor._handleShareImage", async function (wrapped, ...args) {
+        patchFunc("foundry.applications.apps.ImagePopout.prototype.constructor._handleShareImage", async function (wrapped, ...args) {
             let [options] = args;
             let ip = await wrapped(...args);
 
@@ -135,11 +115,61 @@ export class MonksCommonDisplay {
             return ip;
         });
 
-        patchFunc("ActorDirectory.prototype._onClickEntryName", async function (wrapped, ...args) {
+        patchFunc("foundry.applications.apps.ImagePopout.prototype.close", async function (wrapped, ...args) {
+            if (setting("close-image-on-close")) {
+                let commonid = this._commonid;
+                if (commonid) {
+                    MonksCommonDisplay.emit("closeDocument", { args: { id: commonid } });
+                }
+            }
+            wrapped(...args);
+        });
+
+        patchFunc("foundry.documents.collections.Journal.prototype.close", async function (wrapped, ...args) {
+            if (setting("close-image-on-close")) {
+                let commonid = this._commonid;
+                if (commonid) {
+                    MonksCommonDisplay.emit("closeDocument", { args: { id: commonid } });
+                }
+            }
+            wrapped(...args);
+        });
+
+        /*
+        patchFunc("foundry.documents.collections.Journal.prototype.constructor.show", async function (wrapped, ...args) {
+            let commonid = foundry.utils.randomID();
+            let [doc, { force=false, users=[] }] = args;
+
+            if (!((doc instanceof foundry.documents.JournalEntry)
+                || (doc instanceof foundry.documents.JournalEntryPage))) return;
+            if (!doc.isOwner) throw new Error(game.i18n.localize("JOURNAL.ShowBadPermissions"));
+            const strings = Object.fromEntries(["all", "authorized", "selected"].map(k => [k, game.i18n.localize(k)]));
+            let closeAfter = setting("close-after") ?? 0;
+            if (closeAfter != 0) {
+                window.setTimeout(() => {
+                    MonksCommonDisplay.emit("closeDocument", { args: { id: commonid } });
+                }, closeAfter * 1000);
+            }
+            return new Promise(resolve => {
+                game.socket.emit("showEntry", doc.uuid, { force, users, commonid }, () => {
+                    Journal._showEntry(doc.uuid, force);
+                    ui.notifications.info("JOURNAL.ActionShowSuccess", {
+                        format: {
+                            title: doc.name,
+                            which: users.length ? strings.selected : force ? strings.all : strings.authorized
+                        }
+                    });
+                    return resolve(doc);
+                });
+            });
+        }, "OVERRIDE");
+        */
+
+        patchFunc("foundry.applications.sidebar.tabs.ActorDirectory.prototype._onClickEntry", async function (wrapped, ...args) {
             let event = args[0];
             if (!!MonksCommonDisplay.selectToken) {
                 event.preventDefault();
-                const documentId = event.currentTarget.closest(".document").dataset.documentId;
+                const documentId = event.target.closest(".document").dataset.entryId;
 
                 if (setting("per-scene")) {
                     await canvas.scene.setFlag("monks-common-display", MonksCommonDisplay.selectToken, documentId);
@@ -157,7 +187,7 @@ export class MonksCommonDisplay {
         }, "MIXED");
 
         /*
-        patchFunc("Journal.prototype.constructor._showEntry", async function (...args) {
+        patchFunc("foundry.documents.collections.Journal.prototype.constructor._showEntry", async function (...args) {
             let entry = await fromUuid(uuid);
             const options = { tempOwnership: force, mode: JournalSheet.VIEW_MODES.MULTIPLE, pageIndex: 0 };
             if (entry instanceof JournalEntryPage) {
@@ -180,32 +210,6 @@ export class MonksCommonDisplay {
         }, "OVERRIDE");
         */
 
-        patchFunc("PlayerList.prototype._getUserContextOptions", function (wrapped, ...args) {
-            let menu = wrapped(...args);
-
-            menu.push({
-                name: i18n("MonksCommonDisplay.ShowAsCommonDisplay"),
-                icon: '<i class="fas fa-presentation-screen"></i>',
-                condition: li => game.user.isGM && !game.users.get(li[0].dataset.userId).isGM,
-                callback: li => {
-                    let playerdata = setting('playerdata');
-                    let id = li[0].dataset.userId;
-                    let data = playerdata[id] || {};
-
-                    data.display = !data.display;
-
-                    playerdata[id] = data;
-
-                    game.settings.set('monks-common-display', 'playerdata', playerdata).then(() => {
-                        MonksCommonDisplay.emit("dataChange");
-                    });
-                    ui.players.render();
-                }
-            });
-
-            return menu;
-        });
-
         patchFunc("Scene.prototype.view", async function (wrapped, ...args) {
             let result = await wrapped.call(this, ...args);
             if (MonksCommonDisplay.playerdata.display || false) {
@@ -213,6 +217,8 @@ export class MonksCommonDisplay {
                 if (setting("screen-toggle")) {
                     if (MonksCommonDisplay.screenValue == "gm")
                         MonksCommonDisplay.emit("requestScreenPosition");
+                    else if (MonksCommonDisplay.screenValue == "controlled")
+                        MonksCommonDisplay.emit("requestGMTokens");
                     else if (MonksCommonDisplay.screenValue == "scene")
                         MonksCommonDisplay.sceneView();
                     else
@@ -231,7 +237,7 @@ export class MonksCommonDisplay {
         });
     }
 
-    static ready() {
+    static async ready() {
         let display = MonksCommonDisplay.playerdata.display || false;
         //check to see if this is a display screen
         MonksCommonDisplay.dataChange();
@@ -248,22 +254,9 @@ export class MonksCommonDisplay {
             }, 500);
         }
 
-        if (setting("show-toolbar") && game.user.isGM)
-            MonksCommonDisplay.toolbar = new CommonToolbar().render(true);
-
-        if (!game.modules.get('monks-combat-details')?.active && !game.modules.get('monks-enhanced-journal')?.active) {
-            patchFunc("Draggable.prototype._onDragMouseUp", async function (wrapped, ...args) {
-                try {
-                    if (this.app.constructor._getInheritanceChain) {
-                        for (const cls of this.app.constructor._getInheritanceChain()) {
-                            Hooks.callAll(`dragEnd${cls.name}`, this.app, this.app.position);
-                        }
-                    } else {
-                        Hooks.callAll(`dragEnd${this.app.constructor.name}`, this.app, this.app.position);
-                    }
-                } catch (e) { }
-                return wrapped(...args);
-            });
+        if (setting("show-toolbar") && game.user.isGM) {
+            let {top, left } = game.user.getFlag("monks-common-display", "position");
+            MonksCommonDisplay.toolbar = await new CommonToolbar().render(true, { position: {top, left} });
         }
     }
 
@@ -279,7 +272,7 @@ export class MonksCommonDisplay {
     }
 
     static requestGMTokens() {
-        if (game.user.isGM && canvas.scene.active && setting("focus-toggle") && MonksCommonDisplay.focusValue == "gm")
+        if (game.user.isGM && canvas.scene.active && ((setting("screen-toggle") && MonksCommonDisplay.screenValue == "controlled") || (setting("focus-toggle") && MonksCommonDisplay.focusValue == "controlled")))
             MonksCommonDisplay.sendFocusMessage("controlToken", { tokens: canvas.tokens.controlled.map((t) => t.id), control: true });
     }
 
@@ -292,6 +285,15 @@ export class MonksCommonDisplay {
 
         if (olddata.display != MonksCommonDisplay.playerdata.display)
             MonksCommonDisplay.toggleCommonDisplay();
+        else {
+            // The ui sidebar sometimes isn't loading right away, so we need to check if it exists
+            if (MonksCommonDisplay.playerdata.display && ui.sidebar) {
+                ui.sidebar.changeTab('chat', "primary");
+                if (setting("expand-chat-log") && !ui.sidebar.expanded) {
+                    ui.sidebar.toggleExpanded()
+                }
+            }
+        }
 
         // release all tokens on common display for easier sync
         if (MonksCommonDisplay.playerdata.display) {
@@ -310,10 +312,13 @@ export class MonksCommonDisplay {
             .toggleClass('hide-chat', display && !setting('show-chat-log'))
             .toggleClass('hide-camera-views', display && !setting('show-camera-views'))
             .toggleClass('show-combat', display && setting('show-combat'))
-            .toggleClass('show-combatants', display && setting('show-combatants'))
             .attr('limit-combatants', setting('limit-shown'));
-        if (display && ui.sidebar)
-            ui.sidebar.activateTab('chat');
+        if (display && ui.sidebar) {
+            ui.sidebar.changeTab('chat', "primary");
+            if (setting("expand-chat-log") && !ui.sidebar.expanded) {
+                ui.sidebar.toggleExpanded()
+            }
+        }
         //$("body").get(0).style.setProperty("--combat-popout-scale", display ? setting('combat-scale') : 1);
     }
 
@@ -344,14 +349,12 @@ export class MonksCommonDisplay {
 
     static sendScreenMessage(action, data) {
         if (setting("screen-toggle") && MonksCommonDisplay.isAnyDisplayPlayerLoggedIn()) {
-            debug('screen message', action, data)
             MonksCommonDisplay.emit(action, { args: data });
         }
     }
 
     static sendFocusMessage(action, data) {
         if (MonksCommonDisplay.isAnyDisplayPlayerLoggedIn()) {
-            debug('focus message', action, data);
             MonksCommonDisplay.emit(action, { args: data }); //{ args: { tokens: control ? [tokenId] : null, control } });
         }
     }
@@ -371,11 +374,12 @@ export class MonksCommonDisplay {
         MonksCommonDisplay[data.action].call(MonksCommonDisplay, data.args)
     }
 
-    static closeImage(data) {
+    static closeDocument(data) {
         if (MonksCommonDisplay.playerdata.display) {
             let app = MonksCommonDisplay.windows[data.id];
             if (app && app.close)
                 app.close();
+            delete MonksCommonDisplay.windows[data.id];
         }
     }
 
@@ -383,9 +387,8 @@ export class MonksCommonDisplay {
         //check to see if this is a player, if this is and it currently applies to this user, then we need to clear all the potentially open windows
         let user = game.users.find(u => u.id == id);
         if (user || (id == undefined && MonksCommonDisplay.playerdata.display)) {
-            $('.image-popout .header-button.close').click();
-        }//else
-        //    $('#app-' + id + ' .header-button.close').click(); //app-id isn't shared, I guess that should be obvious
+            $('.image-popout .header-control[data-action="close"]').click();
+        }
     }
 
     static closeJournals(id) {
@@ -428,7 +431,6 @@ export class MonksCommonDisplay {
 
     static setScrollTop() {
         let active = $('#combat-popout #combat-tracker li.active')[0];
-        log('Active', active, active?.offsetTop);
         if (active)
             $('#combat-popout #combat-tracker').scrollTop(active.offsetTop - (setting("limit-shown") > 2 ? 50 : 0));
     }
@@ -457,7 +459,6 @@ export class MonksCommonDisplay {
                     let y = token._mcd_y ?? token.y;
                     delete token._mcd_x;
                     delete token._mcd_y;
-                    log('Token', token.name, x, y);
                     x1 = !x1 ? x : Math.min(x1, x);
                     y1 = !y1 ? y : Math.min(y1, y);
                     x2 = !x2 ? x + (token.width * canvas.dimensions.size) : Math.max(x2, x + (token.width * canvas.dimensions.size));
@@ -477,7 +478,7 @@ export class MonksCommonDisplay {
                 let scaleHeight = $('body').height() / height;
                 let panData = { x: x1 + ((x2 - x1) / 2), y: y1 + ((y2 - y1) / 2), animate: true, scale: Math.min(scaleWidth, scaleHeight) };
                 if (panData.x != canvas.scene._viewPosition.x || panData.y != canvas.scene._viewPosition.y) {
-                    panData.speed = 250;
+                    panData.speed = setting("pan-speed");
                 } else {
                     panData.duration = 1000;
                 }
@@ -492,13 +493,13 @@ export class MonksCommonDisplay {
             let screenWidth = $('body').width() - (setting("show-chat-log") ? $("#sidebar").width() : 0);
             let scaleWidth = screenWidth / canvas.scene.dimensions.sceneWidth;
             let scaleHeight = $('body').height() / canvas.scene.dimensions.sceneHeight;
-            let panData = { x: (canvas.scene.dimensions.width / 2) + (setting("show-chat-log") ? $("#sidebar").width() : 0), y: canvas.scene.dimensions.height / 2, animate: true, speed: 200, scale: Math.min(scaleWidth, scaleHeight) };
+            let panData = { x: (canvas.scene.dimensions.width / 2) + (setting("show-chat-log") ? $("#sidebar").width() : 0), y: canvas.scene.dimensions.height / 2, animate: true, speed: setting("pan-speed"), scale: Math.min(scaleWidth, scaleHeight) };
             canvas.animatePan(panData);
         }
     }
 
     static focusChanged() {
-        if (MonksCommonDisplay.focusValue == "gm" && setting("focus-toggle") && canvas.scene.active) {
+        if (MonksCommonDisplay.focusValue == "controlled" && setting("focus-toggle") && canvas.scene.active) {
             let tokens = game.canvas.tokens.controlled.map(t => t.id);
             MonksCommonDisplay.sendFocusMessage("controlToken", { tokens: tokens, overwrite: true, control: true });
         } else {
@@ -512,7 +513,7 @@ export class MonksCommonDisplay {
                 // The screen has changed and this is a player display so refresh the screen 
                 let focus = MonksCommonDisplay.focusValue;
                 let tokens = [];
-                if (focus == "gm")
+                if (focus == "controlled")
                     tokens = MonksCommonDisplay.gmControlledTokens.filter(t => {
                         let token = canvas.tokens.get(t);
                         if (!token) return false;
@@ -547,13 +548,19 @@ export class MonksCommonDisplay {
     }
 
     static getTokens(value) {
-        if (value == "combat" && game.combats.active && game.combats.active.started && game.combats.active.combatant?.token && !game.combats.active.combatant?.token.hidden) {
+        if (value == "combat" && game.combats.active && game.combats.active.started && game.combats.active.combatant?.token && !game.combats.active.combatant.hidden && !game.combats.active.combatant?.token.hidden) {
             let targets = Array.from(game.user.targets).map(t => t.document);
             return [game.combats.active.combatant?.token, ...targets];
         }
 
         if (value == "party")
             return canvas.scene.tokens.filter(t => t.testUserPermission(game.user, "LIMITED") && !t.hidden && !MonksCommonDisplay.isDefeated(t));
+
+        if (value == "controlled")
+            return Array.from(MonksCommonDisplay.gmControlledTokens.map(t => canvas.tokens.get(t)?.document ).filter(token => {
+                if (!token) return false;
+                return !token.hidden && !MonksCommonDisplay.isDefeated(token) && (!setting("just-friendly") || (setting("just-friendly") && token.disposition > 0))
+            }));
 
         let ids = value.split(",").filter(i => /^[a-zA-Z0-9]{16}$/.test(i));
         return canvas.scene.tokens.filter(t => (ids.includes(t.id) || t.actor?.id == value) && !t.hidden);
@@ -569,7 +576,23 @@ Hooks.on('ready', () => {
 });
 
 Hooks.on("updateCombat", function (combat, delta) {
-    if (MonksCommonDisplay.playerdata.display && setting("show-combat")) {
+    let display = MonksCommonDisplay.playerdata.display || false;
+    if (display &&
+        combat.started &&
+        combat.active &&
+        combat.combatant?.token &&
+        !combat.combatant.token.hidden) {
+        if (setting("screen-toggle") && MonksCommonDisplay.screenValue == "combat") {
+            MonksCommonDisplay.changeScreen();
+        }
+
+        if (setting("focus-toggle") &&
+            MonksCommonDisplay.focusValue == "combat" &&
+            combat.combatant?.token.isOwner) {
+            combat.combatant?.token?._object?.control({ releaseOthers: true });
+        }
+    }
+    if (display && setting("show-combat")) {
         if (delta.round === 1 && combat.turn === 0 && combat.started === true) {
             //new combat, pop it out
             const tabApp = ui["combat"];
@@ -577,11 +600,6 @@ Hooks.on("updateCombat", function (combat, delta) {
 
             if (ui.sidebar.activeTab !== "chat")
                 ui.sidebar.activateTab("chat");
-        }
-        if (setting("show-combatants") && setting("limit-shown") > 1) {
-            window.setTimeout(function () {
-                MonksCommonDisplay.setScrollTop();
-            }, 500);
         }
     }
     if (MonksCommonDisplay.toolbar && setting("show-toolbar") && game.user.isGM) {
@@ -615,122 +633,64 @@ Hooks.on("deleteCombat", function (combat) {
     }
 });
 
-/*
-Hooks.on("getSceneControlButtons", (controls) => {
-    if (game.settings.get('monks-common-display', 'show-mirror-tool')) {
-        const mirrorPanTool = {
-            name: "mirror-screen",
-            title: "MonksCommonDisplay.mirror-screen",
-            icon: "fas fa-people-arrows",
-            toggle: true,
-            active: setting('mirror-movement'),
-            onClick: MonksCommonDisplay.toggleMirrorScreen
-        };
-        let tokenTools = controls.find(control => control.name === "token").tools;
-        tokenTools.push(mirrorPanTool);
-    }
-});*/
-
-/*
-Hooks.on('getSceneControlButtons', (controls) => {
-    controls.push({
-        name: 'monkscommondisplay',
-        title: "Monks Common Display",
-        icon: 'fas fa-chalkboard-teacher',
-        toggle: true,
-        visible: game.user.isGM,
-        active: setting('show-toolbar'),
-        tools: [],
-        onClick: toggled => {
-            game.settings.set('monks-common-display', 'show-toolbar', toggled);
-            if (toggled) {
-                if (!MonksCommonDisplay.toolbar)
-                    MonksCommonDisplay.toolbar = new CommonToolbar().render(true);
-            } else {
-                if (MonksCommonDisplay.toolbar)
-                    MonksCommonDisplay.toolbar.close({ properClose: true });
-            }
-        }
-    });
-});
-*/
-
-/*
-Hooks.on("getSceneControlButtons", (controls) => {
-    if (game.user.isGM) {
-        let tokenControls = controls.find(control => control.name === "token")
-        tokenControls.tools.push({
-            name: "monkscommondisplay",
-            title: "Toggle Common Display Bar",
-            icon: "fas fa-chalkboard-teacher",
-            toggle: true,
-            visible: game.user.isGM,
-            active: setting('show-toolbar'),
-            onClick: toggled => {
-                game.settings.set('monks-common-display', 'show-toolbar', toggled);
-                if (toggled) {
-                    if (!MonksCommonDisplay.toolbar)
-                        MonksCommonDisplay.toolbar = new CommonToolbar().render(true);
-                } else {
-                    if (MonksCommonDisplay.toolbar)
-                        MonksCommonDisplay.toolbar.close({ properClose: true });
-                }
-            }
-        });
-    }
-});*/
-
-Hooks.on('renderPlayerList', async (playerList, html, data) => {
+Hooks.on('renderPlayers', async (playerList, html, data, options) => {
     let playerdata = setting('playerdata');
 
     const styles = `flex:0 0 17px;width:17px;height:16px;border:0`;
-    const title = "This player is a common display";
+    const title = i18n("MonksCommonDisplay.PlayerIsCommon");
     const i = `<i style="${styles}" class="fas fa-presentation-screen" title="${title}"></i>`;
 
     game.users.forEach((user) => {
         let data = playerdata[user.id] || {};
         if (data.display) {
-            html.find(`[data-user-id="${user.id}"]`).append(i);
+            $(html).find(`[data-user-id="${user.id}"]`).append(i);
         }
     });
 });
 
-Hooks.on('renderSceneControls', (control, html, data) => {
-    if (game.user.isGM) {
+Hooks.on('renderSceneControls', async (control, html, data) => {
+    if (game.user.isGM && $('#scene-controls-layers .common-display', html).length == 0) {
         const name = 'monkscommondisplay';
-        const title = "Toggle Common Display Bar";
+        const title = i18n("MonksCommonDisplay.ToggleToolbar");
         const icon = 'fas fa-chalkboard-teacher';
         const active = setting('show-toolbar');
-        const btn = $(`<li class="common-display toggle ${game.modules.get("minimal-ui")?.active ? "minimal " : ""}${active ? 'active' : ''}" title="${title}" data-tool="${name}"><i class="${icon}"></i></li>`);
-        btn.on('click', () => {
+        const btn = $(`<button type="button" class="common-display toggle control ui-control layer icon ${icon} ${game.modules.get("minimal-ui")?.active ? "minimal " : ""}" role="tab" data-control="common-display" title="${title}" data-tool="${name}" aria-pressed="${active ? 'true' : 'false'}" aria-label="Common Controls" aria-controls="scene-controls-tools"></button>`);
+        btn.on('click', async () => {
             let toggled = !setting("show-toolbar");
             game.settings.set('monks-common-display', 'show-toolbar', toggled);
             if (toggled) {
                 if (!MonksCommonDisplay.toolbar)
-                    MonksCommonDisplay.toolbar = new CommonToolbar().render(true);
+                    MonksCommonDisplay.toolbar = await new CommonToolbar().render(true);
                 else
                     MonksCommonDisplay.toolbar.render(true);
             } else {
                 if (MonksCommonDisplay.toolbar)
                     MonksCommonDisplay.toolbar.close({ properClose: true });
             }
-            $('.main-controls .common-display', html).toggleClass("active", toggled);
+            $('#scene-controls-layers .common-display', html).attr("aria-pressed", toggled ? "true" : "false");
         });
-        html.find('.main-controls').append(btn);
+        $(html).find('#scene-controls-layers').append($("<li>").append(btn));
     }
 });
 
 Hooks.on("controlToken", async (token, control) => {
     let focus = MonksCommonDisplay.focusValue;
 
-    if (focus == "gm" && game.user.isGM && setting("focus-toggle")) {
+    if (focus == "controlled" && game.user.isGM && setting("focus-toggle")) {
         MonksCommonDisplay.sendFocusMessage("controlToken", { tokens: [token.id], control });
+    }
+
+    let screen = MonksCommonDisplay.screenValue;
+
+    if (screen == "controlled" && game.user.isGM && setting("screen-toggle")) {
+        MonksCommonDisplay.sendScreenMessage("controlToken", { tokens: [token.id], control });
+        MonksCommonDisplay.screenChanged();
     }
 
     let display = MonksCommonDisplay.playerdata.display || false;
     if (display && setting("focus-toggle")) {
         // double-check that this is the token that should be focussed
-        let shouldControl = (focus == "gm" && MonksCommonDisplay.gmControlledTokens.has(token.id)) ||
+        let shouldControl = (focus == "controlled" && MonksCommonDisplay.gmControlledTokens.has(token.id)) ||
             (focus == "combat" && game.combats.active && game.combats.active.combatant?.token.id == token.id) || 
             (focus == token.id || focus == token.actor?.id);
         if (control != shouldControl) {
@@ -756,7 +716,7 @@ Hooks.on("updateToken", async function (document, data, options, userid) {
         MonksCommonDisplay.toolbar.render(true);
 
     let display = MonksCommonDisplay.playerdata.display || false;
-    log("updateToken", display, data, setting("screen-toggle"), document.hidden);
+
     if (display &&
         (data.x != undefined || data.y != undefined) &&
         setting("screen-toggle") &&
@@ -773,27 +733,6 @@ Hooks.on("deleteToken", () => {
         MonksCommonDisplay.toolbar.render(true);
 });
 
-Hooks.on("updateCombat", async function (combat, delta) {
-    let display = MonksCommonDisplay.playerdata.display || false;
-    if (display &&
-        combat.started &&
-        combat.active &&
-        combat.combatant?.token &&
-        !combat.combatant.token.hidden)
-    {
-        if (setting("screen-toggle") && MonksCommonDisplay.screenValue == "combat") {
-            MonksCommonDisplay.changeScreen();
-        }
-
-        if (setting("focus-toggle") &&
-            MonksCommonDisplay.focusValue == "combat" &&
-            combat.combatant?.token.isOwner)
-        {
-            combat.combatant?.token?._object?.control({ releaseOthers: true });
-        }
-    }
-});
-
 Hooks.on("targetToken", async function (user, token, targeted) {
     if (game.combats.viewed?.started &&
         game.combats.viewed?.active &&
@@ -803,4 +742,35 @@ Hooks.on("targetToken", async function (user, token, targeted) {
             MonksCommonDisplay.changeScreen();
         }, 100);
     }
+});
+
+Hooks.on("getUserContextOptions", (app, menuitems) => {
+    menuitems.push({
+        name: i18n("MonksCommonDisplay.ShowAsCommonDisplay"),
+        icon: '<i class="fas fa-presentation-screen"></i>',
+        condition: li => game.user.isGM && !game.users.get(li.dataset.userId).isGM,
+        callback: li => {
+            let playerdata = setting('playerdata');
+            let id = li.dataset.userId;
+            let data = playerdata[id] || {};
+
+            data.display = !data.display;
+
+            playerdata[id] = data;
+
+            game.settings.set('monks-common-display', 'playerdata', playerdata).then(() => {
+                MonksCommonDisplay.emit("dataChange");
+            });
+            ui.players.render();
+        }
+    });
+
+    return menuitems;
+});
+
+Hooks.on("renderCombatTracker", (app, html, data) => {
+    let activeCombatant = $("li.combatant.active", html);
+    if (!activeCombatant.hasClass("hide"))
+        activeCombatant.addClass("display")
+    activeCombatant.nextAll(":not(.hide)").slice(0, setting("limit-shown") - 1).addClass("display");
 });
