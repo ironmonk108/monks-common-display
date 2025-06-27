@@ -1,3 +1,21 @@
+# Version 13.01
+
+v13 Compatibility
+
+Changed the Vision entry from GM to Controlled to better reflect that the vision was based on the controlled token
+
+Added the option to change the screen based on the GM controlled token.  With a setting to limit it to just friendly tokens.
+
+Adjusted the Combat display to only show active combatants rather than the full list and setting the scroll top.
+
+Added the option to automatically close an Image Popup when the GM closes the Popup.
+
+Added option to expand the chat log to support v13 sidebar
+
+Included code to avoid panning to a hidden combatant
+
+Added additonal exceptions
+
 # Version 12.01
 
 v12 Compatibility
