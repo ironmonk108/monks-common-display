@@ -49,6 +49,22 @@ export const registerSettings = function () {
 		}
 	});
 
+	game.settings.register(modulename, "control-follow", {
+		name: i18n("MonksCommonDisplay.control-follow.name"),
+		hint: i18n("MonksCommonDisplay.control-follow.hint"),
+		scope: "world",
+		config: true,
+		default: false,
+		type: Boolean,
+		onChange: () => {
+			if (MonksCommonDisplay.toolbar && setting("show-toolbar") && game.user.isGM) {
+				MonksCommonDisplay.toolbar.render();
+			}
+			MonksCommonDisplay.screenChanged();
+			MonksCommonDisplay.focusChanged();
+		}
+	});
+
 	game.settings.register(modulename, "hide-ui", {
 		name: i18n("MonksCommonDisplay.hide-ui.name"),
 		hint: i18n("MonksCommonDisplay.hide-ui.hint"),

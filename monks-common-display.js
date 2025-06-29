@@ -700,6 +700,32 @@ Hooks.on("controlToken", async (token, control) => {
                 token.release();
         }
     }
+    else if (setting("screen-toggle") && screen != ("gm" || "scene") && setting("control-follow"))
+    {
+        let shouldMirror = token.actor.type == "character" ||
+            token.actor.token?.disposition == foundry.CONST.TOKEN_DISPOSITIONS.FRIENDLY ||
+            token.actor.prototypeToken?.disposition == foundry.CONST.TOKEN_DISPOSITIONS.FRIENDLY;
+
+        if (game.user.isGM && MonksCommonDisplay.toolbar && shouldMirror) {
+
+            if(!control && canvas.tokens.controlled.length > 0)
+                return;
+
+            let tokenids = control ? canvas.tokens.controlled.map((t) => t.id).join(",") : "screen";
+
+            MonksCommonDisplay.selectToken = tokenids;
+
+            if (setting("per-scene"))
+                await canvas.scene.setFlag("monks-common-display", "screen", tokenids);
+            else
+                await game.settings.set("monks-common-display", "screen", tokenids);
+
+            MonksCommonDisplay.screenChanged();
+            MonksCommonDisplay.toolbar.render(true);
+
+            MonksCommonDisplay.selectToken = null;
+        }
+    }
 });
 
 Hooks.on("updateToken", async function (document, data, options, userid) {

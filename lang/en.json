@@ -26,8 +26,6 @@
   "MonksCommonDisplay.control-follow.hint": "Update mirrored actor(s) according to controlled actor(s)",
   "MonksCommonDisplay.hide-ui.name": "Hide UI",
   "MonksCommonDisplay.hide-ui.hint": "Hide the UI for the common display",
-  "MonksCommonDisplay.pan-speed.name": "Pan Speed",
-  "MonksCommonDisplay.pan-speed.hint": "Multiplier applied to panning movements",
   "MonksCommonDisplay.focus-padding.name": "Screen Padding",
   "MonksCommonDisplay.focus-padding.hint": "Padding around the focused token",
   "MonksCommonDisplay.just-friendly.name": "Just Friendly",
