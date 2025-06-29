@@ -13,10 +13,8 @@
   "MonksCommonDisplay.show-chat-log.hint": "Show the side menu with the chat log displayed.",
   "MonksCommonDisplay.show-camera-views.name": "Show Camera Views",
   "MonksCommonDisplay.show-camera-views.hint": "Show the web camera views when video integration is enabled.",
-  "MonksCommonDisplay.allow-gm-players.name": "Allow GM Players",
-  "MonksCommonDisplay.allow-gm-players.hint": "Allow GM Players to be shown in the Common Display list",
-  "MonksCommonDisplay.show-combatants.name": "Show all combatants",
-  "MonksCommonDisplay.show-combatants.hint": "Instead of just showing the active combatant, show the entire list",
+  "MonksCommonDisplay.allow-gm-players.name": "Allow Assistant GM Players",
+  "MonksCommonDisplay.allow-gm-players.hint": "Allow Assistant GM Players to be shown in the Common Display list",
   "MonksCommonDisplay.limit-shown.name": "Limit shown combatants",
   "MonksCommonDisplay.combat-scale.name": "Combat Scale",
   "MonksCommonDisplay.combat-scale.hint": "Scale the size of the combat UI smaller or larger",
@@ -32,8 +30,14 @@
   "MonksCommonDisplay.pan-speed.hint": "Multiplier applied to panning movements",
   "MonksCommonDisplay.focus-padding.name": "Screen Padding",
   "MonksCommonDisplay.focus-padding.hint": "Padding around the focused token",
-  "MonksCommonDisplay.show-vertical.name": "Show Vertical",
-  "MonksCommonDisplay.show-vertical.hint": "Show common display interface vertically",
+  "MonksCommonDisplay.just-friendly.name": "Just Friendly",
+  "MonksCommonDisplay.just-friendly.hint": "When setting the screen to controlled tokens, only pan to friendly tokens",
+  "MonksCommonDisplay.pan-speed.name": "Pan Speed",
+  "MonksCommonDisplay.pan-speed.hint": "Pixels per second to pan to new selection",
+  "MonksCommonDisplay.close-image-on-close.name": "Close Image Popout",
+  "MonksCommonDisplay.close-image-on-close.hint": "Close Image Popout when GM closes Image Popout",
+  "MonksCommonDisplay.expand-chat-log.name": "Expand Chatlog",
+  "MonksCommonDisplay.expand-chat-log.hint": "Expand the chat log so that the Common Display can read the entire chat",
 
   "MonksCommonDisplay.change-settings": "Change Settings",
   "MonksCommonDisplay.mirror-screen": "Mirror Screen",
@@ -45,10 +49,18 @@
   "MonksCommonDisplay.FullScene": "Full Scene",
   "MonksCommonDisplay.Combatant": "Combatant",
   "MonksCommonDisplay.Party": "Party",
+  "MonksCommonDisplay.Screen": "Screen",
+  "MonksCommonDisplay.ScreenHint": "Set what the player screen should mirror",
+  "MonksCommonDisplay.Vision": "Vision",
+  "MonksCommonDisplay.VisionHint": "Set what token should be used for determining vision",
   "MonksCommonDisplay.SelectTokens": "Select Actors",
   "MonksCommonDisplay.ShowAsCommonDisplay": "Show as Common Display",
   "MonksCommonDisplay.ClearImages": "Clear Images",
   "MonksCommonDisplay.ClearJournals": "Clear Journals",
+  "MonksCommonDisplay.Controlled": "Controlled Token",
+  "MonksCommonDisplay.PlayerIsCommon": "This player is a common display",
+  "MonksCommonDisplay.ToggleToolbar": "Toggle Common Display Bar",
+  "MonksCommonDisplay.MonksCommonDisplay": "Monks Common Display",
 
   "MonksCommonDisplay.players": "Players",
   "MonksCommonDisplay.display.name": "Display",
@@ -59,6 +71,12 @@
   "MonksCommonDisplay.selection.hint": "This player is capable of mirroring the token selection",
   "MonksCommonDisplay.clear.name": "Clear",
   "MonksCommonDisplay.clear.hint": "Clear all open windows for this player",
+  "MonksCommonDisplay.player-select-hint": "Select the player(s) you want to use as the common display",
 
-  "MonksCommonDisplay.save": "Save Changes"
+  "MonksCommonDisplay.save": "Save Changes",
+
+  "MonksCommonDisplay.PLAYER.TABS": {
+    "direction": "Direction",
+    "information": "Information"
+  }
 }
