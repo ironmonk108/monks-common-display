@@ -3,7 +3,7 @@
 }
     */
 
-body.hide-ui > *:not(#logo):not(#interface):not(#board):not(#hud):not(#ui-left):not(#ui-middle):not(#ui-right):not(#confetti-canvas):not(#dice-box-canvas):not(#pause):not(#notifications):not(#narrator):not(#combat-popout):not(.image-popout):not(.journal-sheet):not(.journal-attached):not(#slideshow-display):not(#slideshow-canvas):not(#combat-carousel):not(#levels3d):not(#av-config):not(#camera-views):not(#combat-dock):not(#conversation-hud-background):not(.story-sheet):not(#boss-bar):not(#epic-roll-5e):not(.bossOverlay):not(.illandril-grid-labels--grid--container):not(.illandril-grid-labels--ruler--container),
+body.hide-ui > *:not(#logo):not(#interface):not(#board):not(#hud):not(#ui-left):not(#ui-middle):not(#ui-right):not(#confetti-canvas):not(#dice-box-canvas):not(#pause):not(#notifications):not(#narrator):not(#combat-popout):not(.image-popout):not(.journal-sheet):not(.journal-attached):not(#slideshow-display):not(#slideshow-canvas):not(#combat-carousel):not(#levels3d):not(#av-config):not(#camera-views):not(#combat-dock):not(#conversation-hud-background):not(.story-sheet):not(#boss-bar):not(#epic-roll-5e):not(.bossOverlay):not(.illandril-grid-labels--grid--container):not(.illandril-grid-labels--ruler--container):not(#theatre-group),
 body.hide-ui #ui-left > *:not(#smalltime-app),
 body.hide-ui #ui-middle > *:not(#ui-top):not(#ui-bottom):not(#ui-conversation-hud),
 body.hide-ui #ui-middle #ui-top > *:not(#loading):not(#combat-dock):not(.bossBar):not(.bossBarSpacer),
