@@ -247,7 +247,7 @@ export class MonksCommonDisplay {
         } 
         game.socket.on(MonksCommonDisplay.SOCKET, MonksCommonDisplay.onMessage);
 
-        if (display && game.combats.active) {
+        if (display && setting("show-combat") && game.combats.active) {
             ui.combat.renderPopout(ui.combat);
             window.setTimeout(function () {
                 MonksCommonDisplay.setScrollTop();
