@@ -1,9 +1,22 @@
 import { MonksCommonDisplay, i18n, setting } from "./monks-common-display.js";
 import { ControllerApp } from "./apps/controller.js"
+import { ResetPosition } from "./apps/resetposition.js";
 
 export const registerSettings = function () {
 	// Register any custom module settings here
 	let modulename = "monks-common-display";
+
+	game.settings.registerMenu(modulename, 'resetPosition', {
+		name: 'Reset Position',
+		label: 'Reset Position',
+		hint: 'Reset the position of the combat tracker and toolbar if it disappears off the screen.',
+		icon: 'fas fa-desktop',
+		restricted: true,
+		type: ResetPosition,
+		onClick: (value) => {
+			log('Reset position');
+		}
+	});
 
 	game.settings.registerMenu(modulename, 'configure', {
 		name: 'Configure Common Display',
@@ -13,7 +26,7 @@ export const registerSettings = function () {
 		restricted: true,
 		type: ControllerApp,
 		onClick: (value) => {
-			log('Reset position');
+			log('Configure Common Display');
 		}
 	});
 
@@ -57,6 +70,15 @@ export const registerSettings = function () {
 	game.settings.register(modulename, "close-image-on-close", {
 		name: i18n("MonksCommonDisplay.close-image-on-close.name"),
 		hint: i18n("MonksCommonDisplay.close-image-on-close.hint"),
+		scope: "world",
+		config: true,
+		default: false,
+		type: Boolean
+	});
+
+	game.settings.register(modulename, "close-journal-on-close", {
+		name: i18n("MonksCommonDisplay.close-journal-on-close.name"),
+		hint: i18n("MonksCommonDisplay.close-journal-on-close.hint"),
 		scope: "world",
 		config: true,
 		default: false,
@@ -199,11 +221,35 @@ export const registerSettings = function () {
 		config: true,
 		range: {
 			min: 0,
-			max: 60,
+			max: 600,
 			step: 1,
 		},
 		default: 10,
 		type: Number
+	});
+
+	game.settings.register(modulename, "close-journal-after", {
+		name: i18n("MonksCommonDisplay.close-journal-after.name"),
+		hint: i18n("MonksCommonDisplay.close-journal-after.hint"),
+		scope: "world",
+		config: true,
+		range: {
+			min: 0,
+			max: 600,
+			step: 1,
+		},
+		default: 0,
+		type: Number
+	});
+
+	game.settings.register(modulename, "allow-fade", {
+		name: i18n("MonksCommonDisplay.allow-fade.name"),
+		hint: i18n("MonksCommonDisplay.allow-fade.hint"),
+		scope: "client",
+		config: true,
+		default: false,
+		type: Boolean,
+        requiresReload: true
 	});
 
 	game.settings.register(modulename, "startupdata", {

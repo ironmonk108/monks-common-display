@@ -1,3 +1,33 @@
+# Version 14.01
+
+v14 Compatibility
+
+Added the ability to reset the toolbar and combat tracker locations if they get dragged off the screen somewhere they shouldn'targeted.  This does require a reload of the site to reposition the windows.
+
+Updated the toolbar so that it's not dismissable by the escape key
+
+Added header to the combat tracker so that it can be repositioned, in case you'd like it somewhere other than the upper left corner
+
+Fixed the toolbar when using light mode
+
+Fixed the player configuration when using larger fonts
+
+Fixed issues with closing images shown from a journal sheet
+
+Fixed issue closing a Journal Entry when the GM closes the Journal Entry
+
+Adding a separate time for journals to automatically close
+
+Fixed issue with combat tracker showing when it was requested not to be
+
+Fixing issue with incorrect positioning information
+
+Fixed issue when releasing controlled tokens if the player display has the canvas turned off
+
+Switched to limiting party memebers to Observer instead of Limited, so that party members are a bit more intentional and it removes members from the party that the player display shouldn't be following.
+
+Added option to fade the window if you want the ui to be faded
+
 # Version 13.01
 
 v13 Compatibility
@@ -14,7 +44,7 @@ Added option to expand the chat log to support v13 sidebar
 
 Included code to avoid panning to a hidden combatant
 
-Added additonal exceptions
+Added additional exceptions
 
 # Version 12.01
 

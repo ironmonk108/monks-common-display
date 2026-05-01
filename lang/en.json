@@ -20,6 +20,8 @@
   "MonksCommonDisplay.combat-scale.hint": "Scale the size of the combat UI smaller or larger",
   "MonksCommonDisplay.close-after.name": "Auto close popouts",
   "MonksCommonDisplay.close-after.hint": "Automatically close any windows that are popped out after (seconds)",
+  "MonksCommonDisplay.close-journal-after.name": "Auto close journal popouts",
+  "MonksCommonDisplay.close-journal-after.hint": "Automatically close any journal windows that are popped out after (seconds)",
   "MonksCommonDisplay.per-scene.name": "Setting per scene",
   "MonksCommonDisplay.per-scene.hint": "Store the settings per scene so each scene can have different display",
   "MonksCommonDisplay.hide-ui.name": "Hide UI",
@@ -32,6 +34,8 @@
   "MonksCommonDisplay.pan-speed.hint": "Pixels per second to pan to new selection",
   "MonksCommonDisplay.close-image-on-close.name": "Close Image Popout",
   "MonksCommonDisplay.close-image-on-close.hint": "Close Image Popout when GM closes Image Popout",
+  "MonksCommonDisplay.close-journal-on-close.name": "Close Journal Popout",
+  "MonksCommonDisplay.close-journal-on-close.hint": "Close Journal Popout when GM closes Journal Popout",
   "MonksCommonDisplay.expand-chat-log.name": "Expand Chatlog",
   "MonksCommonDisplay.expand-chat-log.hint": "Expand the chat log so that the Common Display can read the entire chat",
 
@@ -68,6 +72,8 @@
   "MonksCommonDisplay.clear.name": "Clear",
   "MonksCommonDisplay.clear.hint": "Clear all open windows for this player",
   "MonksCommonDisplay.player-select-hint": "Select the player(s) you want to use as the common display",
+  "MonksCommonDisplay.allow-fade.name": "Allow Fade",
+  "MonksCommonDisplay.allow-fade.hint": "Allow the common display to use the UI fade effect",
 
   "MonksCommonDisplay.save": "Save Changes",
 

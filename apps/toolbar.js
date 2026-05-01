@@ -48,7 +48,16 @@ export class CommonToolbar extends HandlebarsApplicationMixin(ApplicationV2) {
         }
     };
 
+    nonDismissible = true;
+
     persistPosition = foundry.utils.debounce(this.onPersistPosition.bind(this), 1000);
+
+    _initializeApplicationOptions(options) {
+        options = super._initializeApplicationOptions(options);
+        if (setting("allow-fade"))
+            options.classes.push("faded-ui");
+        return options;
+    }
 
     onPersistPosition(position) {
         game.user.setFlag("monks-common-display", "position", { left: position.left, top: position.top });
@@ -233,7 +242,7 @@ export class CommonToolbar extends HandlebarsApplicationMixin(ApplicationV2) {
             {
                 name: i18n("MonksCommonDisplay.GM"),
                 icon: '<i class="fas fa-user"></i>',
-                condition: (btn) => {
+                visible: (btn) => {
                     return game.user.isGM && btn.closest(".common-button-group").dataset.group == "screen"
                 },
                 callback: async (btn) => {
@@ -250,7 +259,7 @@ export class CommonToolbar extends HandlebarsApplicationMixin(ApplicationV2) {
             {
                 name: i18n("MonksCommonDisplay.Controlled"),
                 icon: '<i class="fas fa-street-view"></i>',
-                condition: game.user.isGM,
+                visible: game.user.isGM,
                 callback: async (btn) => {
                     let group = btn.closest(".common-button-group").dataset.group;
                     MonksCommonDisplay.selectToken = null;
@@ -265,7 +274,7 @@ export class CommonToolbar extends HandlebarsApplicationMixin(ApplicationV2) {
             {
                 name: i18n("MonksCommonDisplay.FullScene"),
                 icon: '<i class="fas fa-presentation-screen"></i>',
-                condition: (btn) => {
+                visible: (btn) => {
                     return game.user.isGM && btn.closest(".common-button-group").dataset.group == "screen";
                 },
                 callback: async (btn) => {
@@ -282,7 +291,7 @@ export class CommonToolbar extends HandlebarsApplicationMixin(ApplicationV2) {
             {
                 name: i18n("MonksCommonDisplay.Combatant"),
                 icon: '<i class="fas fa-swords"></i>',
-                condition: game.user.isGM,
+                visible: game.user.isGM,
                 callback: async (btn) => {
                     let group = btn.closest(".common-button-group").dataset.group;
                     MonksCommonDisplay.selectToken = null;
@@ -297,7 +306,7 @@ export class CommonToolbar extends HandlebarsApplicationMixin(ApplicationV2) {
             {
                 name: i18n("MonksCommonDisplay.Party"),
                 icon: '<i class="fas fa-users-viewfinder"></i>',
-                condition: (btn) => {
+                visible: (btn) => {
                     return game.user.isGM && btn.closest(".common-button-group").dataset.group == "screen";
                 },
                 callback: async (btn) => {
@@ -314,7 +323,7 @@ export class CommonToolbar extends HandlebarsApplicationMixin(ApplicationV2) {
             {
                 name: i18n("MonksCommonDisplay.SelectTokens"),
                 icon: '<i class="fas fa-bullseye"></i>',
-                condition: game.user.isGM,
+                visible: game.user.isGM,
                 callback: btn => {
                     let group = btn.closest(".common-button-group").dataset.group;
                     MonksCommonDisplay.selectToken = (!!MonksCommonDisplay.selectToken ? null : group);
