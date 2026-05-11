@@ -20,6 +20,8 @@
   "MonksCommonDisplay.combat-scale.hint": "Skalowanie rozmiaru interfejsu walki na mniejszy lub większy",
   "MonksCommonDisplay.close-after.name": "Automatyczne zamykanie wyskakujących okienek",
   "MonksCommonDisplay.close-after.hint": "Automatycznie zamyka wszystkie wyskakujące okna po (sekundach)",
+  "MonksCommonDisplay.close-journal-after.name": "Automatyczne zamykanie wyskakujących okienek dziennika",
+  "MonksCommonDisplay.close-journal-after.hint": "Automatycznie zamknij wszystkie okna dziennika, które zostaną wyświetlone po upływie (sekund)",
   "MonksCommonDisplay.per-scene.name": "Ustawienie na scenę",
   "MonksCommonDisplay.per-scene.hint": "Przechowywanie ustawień dla każdej sceny, dzięki czemu każda scena może być wyświetlana w inny sposób.",
   "MonksCommonDisplay.hide-ui.name": "Ukryj UI",
@@ -32,6 +34,8 @@
   "MonksCommonDisplay.pan-speed.hint": "Piksele na sekundę przesuwania do nowego wyboru",
   "MonksCommonDisplay.close-image-on-close.name": "Zamknij wyskakujący obraz",
   "MonksCommonDisplay.close-image-on-close.hint": "Zamknij wyskakujące okienko obrazu, gdy MG zamyka wyskakujące okienko obrazu",
+  "MonksCommonDisplay.close-journal-on-close.name": "Zamknij okienko dziennika",
+  "MonksCommonDisplay.close-journal-on-close.hint": "Zamknij wyskakujące okno dziennika po zamknięciu wyskakującego okna dziennika przez GM",
   "MonksCommonDisplay.expand-chat-log.name": "Rozwiń dziennik czatu",
   "MonksCommonDisplay.expand-chat-log.hint": "Rozwiń dziennik czatu, aby Common Display mógł odczytać cały czat.",
 
@@ -68,6 +72,8 @@
   "MonksCommonDisplay.clear.name": "Wyczyść",
   "MonksCommonDisplay.clear.hint": "Wyczyść wszystkie otwarte okna dla tego gracza",
   "MonksCommonDisplay.player-select-hint": "Wybierz gracza(y), którego(ych) chcesz używać jako ekranu ogólnego",
+  "MonksCommonDisplay.allow-fade.name": "Zezwól na zanikanie",
+  "MonksCommonDisplay.allow-fade.hint": "Zezwól, aby ekran ogólny korzystał z efektu zanikania elementów interfejsu użytkownika",
 
   "MonksCommonDisplay.save": "Zapisz zmiany",
 
